@@ -7,15 +7,18 @@ import time
 from langchain.callbacks.base import BaseCallbackHandler
 from queue import Queue
 from enum import Enum
+import ali
 
 
 class MyLLM(LLM):
     model: str = "my-llm"
     en_stream = False
+    en_ali = False
 
-    def __init__(self, stream=False):
+    def __init__(self, stream=False, ali_model=False):
         super().__init__()
         self.en_stream = stream
+        self.en_ali = ali_model
 
     def _stream(
         self,
@@ -25,16 +28,26 @@ class MyLLM(LLM):
         **kwargs: Any,
     ) -> Iterator[GenerationChunk]:
         # todo your code
-        text = f"stream: {prompt}"
-        for i in range(10):
-            text = f"{text},{i}"
-            time.sleep(0.5)
-            chunk = GenerationChunk(
-                text=text,
-            )
+        if self.en_ali:
+            for text in ali.stream(prompt):
+                chunk = GenerationChunk(
+                    text=text,
+                )
             yield chunk
             if run_manager:
                 run_manager.on_llm_new_token(token=text, chunk=chunk)
+
+        else:
+            text = f"stream: {prompt}"
+            for i in range(10):
+                text = f"{text},{i}"
+                time.sleep(0.5)
+                chunk = GenerationChunk(
+                    text=text,
+                )
+                yield chunk
+                if run_manager:
+                    run_manager.on_llm_new_token(token=text, chunk=chunk)
 
     def _call(
         self,

@@ -1,6 +1,6 @@
 ### llm study
 
-langchain 自定义模型
+langchain 自定义模型-使用阿里《通义千问》模型
 
 #### 安装依赖
 

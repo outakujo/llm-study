@@ -6,7 +6,7 @@ from threading import Thread
 from myllm import MyLLM, PrintCall
 
 
-llm = MyLLM(stream=True)
+llm = MyLLM(stream=True, ali_model=True)
 
 chain = LLMChain(
     llm=llm,
@@ -19,7 +19,7 @@ chain = LLMChain(
 
 def local_test():
     # 直接模型调用
-    for i in llm.stream("问题"):
+    for i in llm.stream("你是谁"):
         print(i)
     # chain 方式调用,callback只有开启stream才有效果
     res = chain("test", callbacks=[PrintCall()])
