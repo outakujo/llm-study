@@ -9,10 +9,13 @@ def stream(
     prompt: str,
     model: str = "qwen-turbo",
 ) -> Iterator[str]:
-    resps = Generation.call(model=model, prompt=prompt, stream=True, api_key=key)
-    for r in resps:
-        if r.status_code == HTTPStatus.OK:
-            text = r.output.text
-            yield text
-        else:
-            yield f"失败: {r.message}"
+    if prompt == "":
+        yield "输入不能为空"
+    else:
+        resps = Generation.call(model=model, prompt=prompt, stream=True, api_key=key)
+        for r in resps:
+            if r.status_code == HTTPStatus.OK:
+                text = r.output.text
+                yield text
+            else:
+                yield f"失败: {r.message}"
