@@ -15,3 +15,8 @@ python main.py
 创建虚拟环境
 
 python3.9 -m venv myenv
+
+设置清华源
+
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
