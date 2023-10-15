@@ -11,9 +11,8 @@ llm = MyLLM(stream=True, ali_model=True)
 chain = LLMChain(
     llm=llm,
     prompt=PromptTemplate.from_template("{ques}"),
-    # todo fix
-    # 这种方式传callback未生效，下面那种方式生效
-    # callbacks=[PrintCall()]
+    # callback是处于chain的生命周期，和chain(callbacks=[])不同
+    callbacks=[PrintCall()],
 )
 
 
@@ -21,7 +20,8 @@ def local_test():
     # 直接模型调用
     for i in llm.stream("你是谁"):
         print(i)
-    # chain 方式调用,callback只有开启stream才有效果
+    # chain方式调用,callback只有开启stream才有效果
+    # callback是处于llm模型的生命周期，和chain的生命周期不同
     res = chain("test", callbacks=[PrintCall()])
     print(res)
 
